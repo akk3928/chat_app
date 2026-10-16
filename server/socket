@@ -1,0 +1,49 @@
+const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
+const Message = require('./models/Message');
+
+// userId -> number of open connections (a user may have several tabs)
+const online = new Map();
+
+module.exports = function setupSocket(io) {
+  io.use((socket, next) => {
+    try {
+      const { id } = jwt.verify(socket.handshake.auth.token, process.env.JWT_SECRET);
+      socket.userId = String(id);
+      next();
+    } catch {
+      next(new Error('Authentication failed'));
+    }
+  });
+
+  const broadcastOnline = () => io.emit('online_users', [...online.keys()]);
+
+  io.on('connection', (socket) => {
+    const me = socket.userId;
+    socket.join(me); // personal room
+    online.set(me, (online.get(me) || 0) + 1);
+    broadcastOnline();
+
+    socket.on('send_message', async ({ to, text }, ack) => {
+      try {
+        const clean = (text || '').trim();
+        if (!clean || !mongoose.isValidObjectId(to)) return ack?.({ ok: false });
+        const msg = await Message.create({ sender: me, receiver: to, text: clean });
+        io.to(to).to(me).emit('receive_message', msg); // receiver + all sender tabs
+        ack?.({ ok: true });
+      } catch {
+        ack?.({ ok: false });
+      }
+    });
+
+    socket.on('typing', ({ to }) => io.to(to).emit('typing', { from: me }));
+    socket.on('stop_typing', ({ to }) => io.to(to).emit('stop_typing', { from: me }));
+
+    socket.on('disconnect', () => {
+      const left = (online.get(me) || 1) - 1;
+      if (left <= 0) online.delete(me);
+      else online.set(me, left);
+      broadcastOnline();
+    });
+  });
+};
