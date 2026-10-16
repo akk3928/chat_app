@@ -1,0 +1,65 @@
+:root {
+  --ink: #1d1b26;
+  --plum: #2b1b3d;
+  --plum-soft: #3c2a52;
+  --paper: #f3f1f7;
+  --white: #fff;
+  --marigold: #f2b134;
+  --mint: #3ecf8e;
+  --muted: #7a7589;
+  --line: #e1dde9;
+  --danger: #b3261e;
+}
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body { font-family: 'Figtree', system-ui, sans-serif; color: var(--ink); background: var(--paper); }
+h1 { font-family: 'Bricolage Grotesque', 'Figtree', sans-serif; font-size: 1.75rem; margin: 0 0 .5rem; }
+button, input { font: inherit; }
+:focus-visible { outline: 3px solid var(--marigold); outline-offset: 2px; }
+
+.auth { min-height: 100%; display: grid; place-items: center; padding: 1rem; background: var(--plum); }
+.auth-card { width: min(100%, 24rem); background: var(--white); padding: 2rem; border-radius: 14px; display: grid; gap: 1rem; }
+.auth-card label { display: grid; gap: .35rem; font-weight: 500; font-size: .9rem; }
+input { padding: .7rem .8rem; border: 1px solid var(--line); border-radius: 8px; background: var(--white); }
+input:focus { border-color: var(--plum-soft); }
+.primary { background: var(--plum); color: var(--white); border: 0; padding: .7rem 1.1rem; border-radius: 8px; font-weight: 600; cursor: pointer; }
+.primary:hover:not(:disabled) { background: var(--plum-soft); }
+.primary:disabled { opacity: .45; cursor: not-allowed; }
+.link { background: none; border: 0; color: var(--plum-soft); cursor: pointer; text-decoration: underline; padding: 0; }
+.link.light { color: #cfc4e0; }
+.error { color: var(--danger); margin: 0; font-size: .9rem; }
+
+.shell { height: 100%; display: grid; grid-template-columns: 18rem 1fr; }
+.sidebar { background: var(--plum); color: var(--white); display: flex; flex-direction: column; min-height: 0; }
+.sidebar header { padding: 1rem; display: flex; justify-content: space-between; align-items: center; gap: .5rem; border-bottom: 1px solid var(--plum-soft); }
+.sidebar header small { display: block; color: #cfc4e0; font-size: .75rem; overflow: hidden; text-overflow: ellipsis; }
+.sidebar ul { list-style: none; margin: 0; padding: .5rem; overflow-y: auto; flex: 1; }
+.contact { width: 100%; display: flex; align-items: center; gap: .65rem; padding: .7rem .75rem; background: none; border: 0; color: inherit; border-radius: 8px; cursor: pointer; text-align: left; }
+.contact:hover { background: var(--plum-soft); }
+.contact.active { background: var(--plum-soft); box-shadow: inset 3px 0 0 var(--marigold); }
+.contact .name { flex: 1; }
+.dot { width: .6rem; height: .6rem; border-radius: 50%; background: #6b5d82; }
+.dot.on { background: var(--mint); }
+.badge { background: var(--marigold); color: var(--ink); font-size: .75rem; font-weight: 700; padding: .1rem .5rem; border-radius: 999px; }
+
+.pane { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+.pane-head { padding: 1rem 1.25rem; background: var(--white); border-bottom: 1px solid var(--line); display: flex; align-items: baseline; gap: .75rem; }
+.pane-head small { color: var(--muted); }
+.messages { flex: 1; overflow-y: auto; padding: 1.25rem; display: flex; flex-direction: column; gap: .5rem; }
+.bubble { max-width: min(70%, 32rem); padding: .55rem .8rem; border-radius: 14px; overflow-wrap: anywhere; }
+.bubble p { margin: 0; }
+.bubble time { display: block; font-size: .7rem; opacity: .65; margin-top: .2rem; text-align: right; }
+.bubble.mine { align-self: flex-end; background: var(--plum); color: var(--white); border-bottom-right-radius: 4px; }
+.bubble.theirs { align-self: flex-start; background: var(--white); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+.typing { color: var(--muted); font-style: italic; margin: 0; font-size: .9rem; }
+.composer { display: flex; gap: .6rem; padding: .9rem 1.25rem; background: var(--white); border-top: 1px solid var(--line); }
+.composer input { flex: 1; }
+.empty { color: var(--muted); padding: 1rem; margin: 0; }
+.empty.center { margin: auto; text-align: center; }
+.sidebar .empty { color: #cfc4e0; font-size: .9rem; }
+
+@media (max-width: 640px) {
+  .shell { grid-template-columns: 1fr; grid-template-rows: 11rem 1fr; }
+  .bubble { max-width: 85%; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
